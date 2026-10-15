@@ -21,7 +21,7 @@ curl -fsSL https://raw.githubusercontent.com/kxngHADES/NetRunner/main/scripts/in
 irm https://raw.githubusercontent.com/kxngHADES/NetRunner/main/scripts/install.ps1 | iex
 ```
 
-**With Go 1.22+** (installs into `$(go env GOPATH)/bin`, which must be on your `PATH`):
+**With Go 1.25+** (installs into `$(go env GOPATH)/bin`, which must be on your `PATH`):
 
 ```
 go install github.com/kxngHADES/NetRunner/cmd/netrunner@latest

@@ -1,3 +1,3 @@
 module github.com/kxngHADES/NetRunner
 
-go 1.22
+go 1.25

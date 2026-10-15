@@ -16,7 +16,7 @@ case "$(uname -m)" in
 esac
 
 if [ -z "${VERSION:-}" ]; then
-  VERSION=$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p' | head -n1)
+  VERSION=$(curl -fsSL "https://api.github.com/repos/$REPO/releases?per_page=1" | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p' | head -n1)
 fi
 [ -n "$VERSION" ] || { echo "could not determine latest version (no releases yet?)" >&2; exit 1; }
 
