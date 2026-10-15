@@ -1,0 +1,40 @@
+version: 2
+
+project_name: netrunner
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: netrunner
+    main: ./cmd/netrunner
+    binary: netrunner
+    env:
+      - CGO_ENABLED=0
+    goos: [linux, darwin, windows]
+    goarch: [amd64, arm64]
+    flags: [-trimpath]
+    ldflags:
+      - -s -w -X github.com/kxngHADES/NetRunner/internal/cli.Version={{.Version}}
+
+archives:
+  - formats: [tar.gz]
+    name_template: "netrunner_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    files:
+      - README.md
+      - CHANGELOG.md
+
+checksum:
+  name_template: checksums.txt
+
+# Release notes and the CHANGELOG are produced by release-please; GoReleaser
+# only attaches binaries to the release that already exists.
+changelog:
+  disable: true
+
+release:
+  mode: keep-existing

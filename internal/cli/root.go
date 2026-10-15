@@ -8,10 +8,23 @@ import (
 	"io"
 	"os"
 	"os/signal"
+	"runtime/debug"
+	"strings"
 )
 
-// Version is the NetRunner version.
-const Version = "0.1.0"
+// Version is the NetRunner version. Release builds set it with
+// -ldflags "-X github.com/kxngHADES/NetRunner/internal/cli.Version=x.y.z".
+var Version = "dev"
+
+// `go install ...@vX.Y.Z` embeds the module version rather than using ldflags.
+func init() {
+	if Version != "dev" {
+		return
+	}
+	if bi, ok := debug.ReadBuildInfo(); ok && bi.Main.Version != "" && bi.Main.Version != "(devel)" {
+		Version = strings.TrimPrefix(bi.Main.Version, "v")
+	}
+}
 
 // Exit codes (see docs/usage.md).
 const (
@@ -29,7 +42,8 @@ func (e usageError) Error() string { return e.msg }
 
 func usagef(format string, a ...any) error { return usageError{fmt.Sprintf(format, a...)} }
 
-const rootHelp = `NetRunner - network discovery and diagnostics (v` + Version + `)
+func rootHelp() string {
+	return `NetRunner - network discovery and diagnostics (v` + Version + `)
 
 Usage:
   netrunner <command> [flags]
@@ -46,16 +60,17 @@ Examples:
 Only scan networks and systems you own or have explicit permission to assess.
 Run "netrunner <command> --help" for command flags.
 `
+}
 
 // Run executes NetRunner and returns the process exit code.
 func Run(args []string, stdout, stderr io.Writer) int {
 	if len(args) == 0 {
-		fmt.Fprint(stderr, rootHelp)
+		fmt.Fprint(stderr, rootHelp())
 		return ExitUsage
 	}
 	switch args[0] {
 	case "-h", "--help", "help":
-		fmt.Fprint(stdout, rootHelp)
+		fmt.Fprint(stdout, rootHelp())
 		return ExitOK
 	case "version", "--version":
 		fmt.Fprintln(stdout, "netrunner", Version)
@@ -65,7 +80,7 @@ func Run(args []string, stdout, stderr io.Writer) int {
 		defer stop()
 		return finish(runScan(ctx, args[1:], stdout, stderr), stderr)
 	default:
-		fmt.Fprintf(stderr, "netrunner: unknown command %q\n\n%s", args[0], rootHelp)
+		fmt.Fprintf(stderr, "netrunner: unknown command %q\n\n%s", args[0], rootHelp())
 		return ExitUsage
 	}
 }

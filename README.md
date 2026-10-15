@@ -7,12 +7,34 @@ A command-line network discovery and diagnostics tool written in Go. This is **P
 
 ## Install
 
+After installing, run it by typing `netrunner`.
+
+**Linux / macOS** (downloads the latest release, verifies its checksum):
+
 ```
-go build -o bin/netrunner ./cmd/netrunner      # or: make build
-go install ./cmd/netrunner
+curl -fsSL https://raw.githubusercontent.com/kxngHADES/NetRunner/main/scripts/install.sh | sh
 ```
 
-Requires Go 1.22+ (standard library only, no third-party dependencies).
+**Windows (PowerShell):**
+
+```
+irm https://raw.githubusercontent.com/kxngHADES/NetRunner/main/scripts/install.ps1 | iex
+```
+
+**With Go 1.22+** (installs into `$(go env GOPATH)/bin`, which must be on your `PATH`):
+
+```
+go install github.com/kxngHADES/NetRunner/cmd/netrunner@latest
+```
+
+**From source:**
+
+```
+git clone https://github.com/kxngHADES/NetRunner && cd NetRunner
+make build     # produces bin/netrunner
+```
+
+Or download a binary directly from the [Releases](https://github.com/kxngHADES/NetRunner/releases) page. Check the install with `netrunner version`.
 
 ## Usage
 
@@ -72,3 +94,9 @@ make test    # go test ./...
 make race    # go test -race ./...
 make vet
 ```
+
+## Contributing and releases
+
+Commits to `main` must follow [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:` ...). Pull requests are squash-merged, so the **PR title** is what counts and is checked by CI.
+
+Releases are automatic: after each merge to `main`, release-please opens or updates a "release PR" that bumps the version and `CHANGELOG.md`. Merging that PR creates the `vX.Y.Z` tag and GitHub release, and GoReleaser attaches binaries for Linux, macOS and Windows (amd64/arm64).
