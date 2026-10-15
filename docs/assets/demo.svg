@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 280" width="760" height="280" role="img" aria-label="Animated demo of netrunner scanning a host and listing open ports">
+<style>text{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace}@keyframes l0{0%,2.14%{opacity:0}2.74%,94%{opacity:1}98%,100%{opacity:0}}@keyframes l1{0%,14.29%{opacity:0}14.89%,94%{opacity:1}98%,100%{opacity:0}}@keyframes l2{0%,14.29%{opacity:0}14.89%,94%{opacity:1}98%,100%{opacity:0}}@keyframes l3{0%,44.29%{opacity:0}44.89%,94%{opacity:1}98%,100%{opacity:0}}@keyframes l4{0%,47.14%{opacity:0}47.74%,94%{opacity:1}98%,100%{opacity:0}}@keyframes l5{0%,50.00%{opacity:0}50.60%,94%{opacity:1}98%,100%{opacity:0}}@keyframes l6{0%,52.86%{opacity:0}53.46%,94%{opacity:1}98%,100%{opacity:0}}@keyframes l7{0%,60.00%{opacity:0}60.60%,94%{opacity:1}98%,100%{opacity:0}}@keyframes pb{0%,18.57%{opacity:0}19.17%,94%{opacity:1}98%,100%{opacity:0}}@keyframes fill{0%,20.00%{width:0}41.43%,100%{width:240px}}</style>
+<rect width="760" height="280" rx="12" fill="#0b1220"/>
+<rect width="760" height="30" rx="12" fill="#17233d"/><rect y="18" width="760" height="12" fill="#17233d"/>
+<circle cx="20" cy="15" r="5" fill="#f87171"/><circle cx="38" cy="15" r="5" fill="#fbbf24"/><circle cx="56" cy="15" r="5" fill="#34d399"/>
+<g transform="translate(0,30)">
+<text x="28" y="52" font-size="14" fill="#e2e8f0" xml:space="preserve" style="opacity:0;animation:l0 14.0s linear infinite"><tspan fill="#34d399">$</tspan> netrunner scan --target 192.168.1.10 --ports web</text>
+<text x="28" y="82" font-size="14" fill="#e2e8f0" xml:space="preserve" style="opacity:0;animation:l1 14.0s linear infinite"><tspan fill="#38bdf8">NetRunner v0.1.0</tspan></text>
+<text x="28" y="102" font-size="14" fill="#e2e8f0" xml:space="preserve" style="opacity:0;animation:l2 14.0s linear infinite"><tspan fill="#64748b">Target: 192.168.1.10   Ports: 7   Workers: 100   Timeout: 1s</tspan></text>
+<text x="28" y="140" font-size="14" fill="#e2e8f0" xml:space="preserve" style="opacity:0;animation:l3 14.0s linear infinite"><tspan fill="#94a3b8">HOST            PORT      STATE   SERVICE    LATENCY</tspan></text>
+<text x="28" y="164" font-size="14" fill="#e2e8f0" xml:space="preserve" style="opacity:0;animation:l4 14.0s linear infinite">192.168.1.10   80/tcp    <tspan fill="#34d399">open</tspan>    http       1.2ms</text>
+<text x="28" y="188" font-size="14" fill="#e2e8f0" xml:space="preserve" style="opacity:0;animation:l5 14.0s linear infinite">192.168.1.10   443/tcp   <tspan fill="#34d399">open</tspan>    https      1.5ms</text>
+<text x="28" y="212" font-size="14" fill="#e2e8f0" xml:space="preserve" style="opacity:0;animation:l6 14.0s linear infinite">192.168.1.10   8080/tcp  <tspan fill="#34d399">open</tspan>    http-alt   1.1ms</text>
+<text x="28" y="250" font-size="14" fill="#e2e8f0" xml:space="preserve" style="opacity:0;animation:l7 14.0s linear infinite"><tspan fill="#34d399">Scan complete.</tspan> <tspan fill="#94a3b8">Hosts: 1   Ports checked: 7/7   Open: 3   Duration: 21ms</tspan></text>
+<g style="opacity:0;animation:pb 14.0s linear infinite"><text x="28" y="124" font-size="14" fill="#64748b">scanning</text><rect x="110" y="112" width="240" height="12" rx="6" fill="#1e2b47"/><rect x="110" y="112" width="0" height="12" rx="6" fill="#34d399" style="animation:fill 14.0s linear infinite"/></g>
+</g>
+</svg>
