@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 220" width="900" height="220" role="img" aria-label="NetRunner: network discovery and diagnostics">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b1220"/><stop offset="1" stop-color="#111c33"/></linearGradient>
+<linearGradient id="ttl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#38bdf8"/></linearGradient>
+<linearGradient id="sweep" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#34d399" stop-opacity="0"/><stop offset="1" stop-color="#34d399" stop-opacity="0.35"/></linearGradient>
+</defs>
+<style>
+text{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace}
+.p{fill:#1e2b47;animation:blink 3s ease-in-out infinite}
+@keyframes blink{0%,60%,100%{fill:#1e2b47}25%{fill:#34d399}}
+.sw{animation:sweep 4s linear infinite}
+@keyframes sweep{from{transform:translateX(-120px)}to{transform:translateX(900px)}}
+.cur{animation:cur 1s steps(1) infinite}
+@keyframes cur{50%{opacity:0}}
+.ring{fill:none;stroke:#34d399;stroke-width:2;transform-origin:820px 70px;animation:ring 3s ease-out infinite}
+@keyframes ring{from{transform:scale(.2);opacity:.9}to{transform:scale(1);opacity:0}}
+</style>
+<rect width="900" height="220" rx="16" fill="url(#bg)"/>
+<g clip-path="inset(0 round 16px)"><rect class="sw" x="0" y="0" width="120" height="220" fill="url(#sweep)"/></g>
+<circle class="ring" cx="820" cy="70" r="46"/>
+<circle class="ring" cx="820" cy="70" r="46" style="animation-delay:1s"/>
+<circle class="ring" cx="820" cy="70" r="46" style="animation-delay:2s"/>
+<circle cx="820" cy="70" r="5" fill="#34d399"/>
+<text x="40" y="58" font-size="16" fill="#64748b">$ netrunner scan --target 127.0.0.1<tspan class="cur" fill="#34d399"> _</tspan></text>
+<text x="40" y="115" font-size="54" font-weight="700" fill="url(#ttl)">NetRunner</text>
+<text x="42" y="146" font-size="17" fill="#94a3b8">Find what is listening on your network. Fast, safe, and scriptable.</text>
+<rect class="p" x="40" y="168" width="26" height="14" rx="3" style="animation-delay:0.00s"/>
+<rect class="p" x="75" y="168" width="26" height="14" rx="3" style="animation-delay:0.23s"/>
+<rect class="p" x="110" y="168" width="26" height="14" rx="3" style="animation-delay:0.46s"/>
+<rect class="p" x="145" y="168" width="26" height="14" rx="3" style="animation-delay:0.69s"/>
+<rect class="p" x="180" y="168" width="26" height="14" rx="3" style="animation-delay:0.92s"/>
+<rect class="p" x="215" y="168" width="26" height="14" rx="3" style="animation-delay:1.15s"/>
+<rect class="p" x="250" y="168" width="26" height="14" rx="3" style="animation-delay:1.38s"/>
+<rect class="p" x="285" y="168" width="26" height="14" rx="3" style="animation-delay:1.61s"/>
+<rect class="p" x="320" y="168" width="26" height="14" rx="3" style="animation-delay:1.84s"/>
+<rect class="p" x="355" y="168" width="26" height="14" rx="3" style="animation-delay:2.07s"/>
+<rect class="p" x="390" y="168" width="26" height="14" rx="3" style="animation-delay:2.30s"/>
+<rect class="p" x="425" y="168" width="26" height="14" rx="3" style="animation-delay:2.53s"/>
+<rect class="p" x="460" y="168" width="26" height="14" rx="3" style="animation-delay:2.76s"/>
+<rect class="p" x="495" y="168" width="26" height="14" rx="3" style="animation-delay:2.99s"/>
+<rect class="p" x="530" y="168" width="26" height="14" rx="3" style="animation-delay:0.22s"/>
+<rect class="p" x="565" y="168" width="26" height="14" rx="3" style="animation-delay:0.45s"/>
+<rect class="p" x="600" y="168" width="26" height="14" rx="3" style="animation-delay:0.68s"/>
+<rect class="p" x="635" y="168" width="26" height="14" rx="3" style="animation-delay:0.91s"/>
+<rect class="p" x="670" y="168" width="26" height="14" rx="3" style="animation-delay:1.14s"/>
+<rect class="p" x="705" y="168" width="26" height="14" rx="3" style="animation-delay:1.37s"/>
+<rect class="p" x="740" y="168" width="26" height="14" rx="3" style="animation-delay:1.60s"/>
+<rect class="p" x="775" y="168" width="26" height="14" rx="3" style="animation-delay:1.83s"/>
+<rect class="p" x="810" y="168" width="26" height="14" rx="3" style="animation-delay:2.06s"/>
+<rect class="p" x="845" y="168" width="26" height="14" rx="3" style="animation-delay:2.29s"/>
+</svg>
