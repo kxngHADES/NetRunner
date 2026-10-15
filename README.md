@@ -86,7 +86,7 @@ irm https://raw.githubusercontent.com/kxngHADES/NetRunner/main/scripts/install.p
 </details>
 
 <details>
-<summary><b>With Go 1.22 or newer</b></summary>
+<summary><b>With Go 1.25 or newer</b></summary>
 
 Installs into `$(go env GOPATH)/bin`, which needs to be on your `PATH`:
 
