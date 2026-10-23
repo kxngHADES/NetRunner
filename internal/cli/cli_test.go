@@ -100,3 +100,64 @@ func TestScanJSONStdoutIsPure(t *testing.T) {
 		t.Errorf("stdout is not pure JSON: %q", out)
 	}
 }
+
+func TestDiscoverInvalidArguments(t *testing.T) {
+	cases := [][]string{
+		{"discover"},
+		{"discover", "--subnet", "10.0.0.0/8"},
+		{"discover", "--subnet", "nope"},
+		{"discover", "--subnet", "127.0.0.1/32", "--ports", "0"},
+		{"discover", "--subnet", "127.0.0.1/32", "--workers", "0"},
+		{"discover", "--subnet", "127.0.0.1/32", "--format", "xml"},
+		{"discover", "--subnet", "127.0.0.1/32", "extra"},
+	}
+	for _, args := range cases {
+		if code, _, _ := run(args...); code != ExitUsage {
+			t.Errorf("%v: exit %d, want %d", args, code, ExitUsage)
+		}
+	}
+	if code, _, _ := run("discover", "--help"); code != 0 {
+		t.Errorf("discover --help exit %d", code)
+	}
+}
+
+func TestDiscoverJSON(t *testing.T) {
+	l, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer l.Close()
+	go func() {
+		for {
+			c, err := l.Accept()
+			if err != nil {
+				return
+			}
+			c.Close()
+		}
+	}()
+	port := strconv.Itoa(l.Addr().(*net.TCPAddr).Port)
+
+	code, out, _ := run("discover", "--subnet", "127.0.0.1/32", "--ports", port, "--format", "json", "--dashboard")
+	if code != 0 {
+		t.Fatalf("exit %d", code)
+	}
+	var rep struct {
+		Kind    string `json:"kind"`
+		Status  string `json:"status"`
+		Summary struct {
+			HostsAlive int `json:"hosts_alive"`
+		} `json:"summary"`
+		Hosts []struct {
+			IP    string `json:"ip"`
+			State string `json:"state"`
+		} `json:"hosts"`
+	}
+	if err := json.Unmarshal([]byte(out), &rep); err != nil {
+		t.Fatalf("stdout is not pure JSON: %v %q", err, out)
+	}
+	if rep.Kind != "discovery" || rep.Status != "complete" || rep.Summary.HostsAlive != 1 ||
+		len(rep.Hosts) != 1 || rep.Hosts[0].IP != "127.0.0.1" || rep.Hosts[0].State != "open" {
+		t.Errorf("report: %+v", rep)
+	}
+}

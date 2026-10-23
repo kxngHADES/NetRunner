@@ -4,12 +4,10 @@ package output
 import (
 	"encoding/json"
 	"io"
-
-	"github.com/kxngHADES/NetRunner/internal/scanner"
 )
 
-// WriteJSON writes the report as indented JSON.
-func WriteJSON(w io.Writer, rep scanner.ScanReport) error {
+// WriteJSON writes a report (scan or discovery) as indented JSON.
+func WriteJSON(w io.Writer, rep any) error {
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "  ")
 	return enc.Encode(rep)

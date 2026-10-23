@@ -32,12 +32,14 @@ func runScan(ctx context.Context, args []string, stdout, stderr io.Writer) error
 	noColor := fs.Bool("no-color", false, "disable terminal colors")
 	quiet := fs.Bool("quiet", false, "suppress progress output")
 	showClosed := fs.Bool("show-closed", false, "include closed and filtered ports in table output")
+	dash := fs.Bool("dashboard", false, "show a live dashboard of workers, hosts and totals")
 	fs.Usage = func() {
 		fmt.Fprint(stderr, scanHelp)
 		fs.PrintDefaults()
 		fmt.Fprint(stderr, "\nExamples:\n  netrunner scan --target 127.0.0.1 --ports 1-1024\n"+
 			"  netrunner scan --target 192.168.1.10 --ports 22,80,443 --workers 50 --timeout 800ms\n"+
-			"  netrunner scan --target 192.168.1.10 --format json --output results.json\n")
+			"  netrunner scan --target 192.168.1.10 --format json --output results.json\n"+
+			"  netrunner scan --target 192.168.1.1,192.168.1.10 --ports 1-1024 --dashboard\n")
 	}
 	if err := fs.Parse(args); err != nil {
 		if errors.Is(err, flag.ErrHelp) {
@@ -83,15 +85,30 @@ func runScan(ctx context.Context, args []string, stdout, stderr io.Writer) error
 		cfg.Targets = append(cfg.Targets, h.IP)
 	}
 
-	prog := newProgress(stderr, !*quiet)
-	if !*quiet {
+	scope := fmt.Sprintf("target %s   ports %d   timeout %s", strings.Join(targets, ","), len(portList), cfg.Timeout)
+	var board *dashboard
+	if *dash && !*quiet {
+		board = newDashboard(stderr, "scan", scope, "ports", cfg.Workers, len(hosts)*len(portList), !*noColor && useColor(stderr))
+	}
+	prog := newProgress(stderr, !*quiet && board == nil)
+	onProgress := prog.update
+	if board != nil {
+		board.addHosts(hosts, len(portList))
+		onProgress = board.onScan
+	} else if !*quiet {
 		fmt.Fprintf(stderr, "NetRunner v%s\nTarget: %s   Ports: %d   Workers: %d   Timeout: %s\n",
 			Version, strings.Join(targets, ","), len(portList), cfg.Workers, cfg.Timeout)
 	}
 
 	start := time.Now()
-	out := scanner.Scan(ctx, cfg, scanner.CheckTCP, prog.update)
+	if board != nil {
+		board.run()
+	}
+	out := scanner.Scan(ctx, cfg, scanner.CheckTCP, onProgress)
 	end := time.Now()
+	if board != nil {
+		board.close(out.Incomplete)
+	}
 	prog.finish()
 
 	rep := scanner.BuildReport("netrunner/"+Version, hosts, cfg, out, start, end)
@@ -110,32 +127,31 @@ func runScan(ctx context.Context, args []string, stdout, stderr io.Writer) error
 }
 
 func writeReport(rep scanner.ScanReport, format, path string, stdout io.Writer, color, showClosed bool) error {
-	w := stdout
-	toFile := path != ""
-	if toFile {
-		f, err := os.Create(path)
-		if err != nil {
-			return err
+	return writeOutput(path, stdout, func(w io.Writer, toFile bool) error {
+		if format == "json" {
+			return output.WriteJSON(w, rep)
 		}
-		defer f.Close()
-		w = f
-	}
-	var err error
-	if format == "json" {
-		err = output.WriteJSON(w, rep)
-	} else {
-		err = output.WriteTable(w, rep, output.TableOptions{
+		return output.WriteTable(w, rep, output.TableOptions{
 			ShowClosed: showClosed,
 			Color:      color && !toFile && useColor(stdout),
 		})
+	})
+}
+
+// writeOutput runs write against the file at path, or stdout when path is empty.
+func writeOutput(path string, stdout io.Writer, write func(w io.Writer, toFile bool) error) error {
+	if path == "" {
+		return write(stdout, false)
 	}
+	f, err := os.Create(path)
 	if err != nil {
 		return err
 	}
-	if f, ok := w.(*os.File); ok && toFile {
-		return f.Close()
+	defer f.Close()
+	if err := write(f, true); err != nil {
+		return err
 	}
-	return nil
+	return f.Close()
 }
 
 func checkOutputPath(path string) error {

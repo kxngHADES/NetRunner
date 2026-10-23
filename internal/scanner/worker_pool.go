@@ -22,6 +22,7 @@ type Progress struct {
 	Total  int
 	Open   int
 	Active int
+	Result PortResult // the result that triggered this update
 }
 
 // Outcome is the raw result of a scan run.
@@ -93,7 +94,7 @@ func Scan(ctx context.Context, cfg Config, check Checker, onProgress func(Progre
 			open++
 		}
 		if onProgress != nil {
-			onProgress(Progress{Done: len(out.Results), Total: total, Open: open, Active: int(active.Load())})
+			onProgress(Progress{Done: len(out.Results), Total: total, Open: open, Active: int(active.Load()), Result: r})
 		}
 	}
 	out.Incomplete = len(out.Results) < total
