@@ -32,10 +32,11 @@ type progress struct {
 	start   time.Time
 	last    time.Time
 	shown   bool
+	label   string // what Progress.Open counts
 }
 
 func newProgress(w io.Writer, enabled bool) *progress {
-	return &progress{w: w, enabled: enabled && isTerminal(w), start: time.Now()}
+	return &progress{w: w, enabled: enabled && isTerminal(w), start: time.Now(), label: "open"}
 }
 
 func (p *progress) update(s scanner.Progress) {
@@ -54,8 +55,8 @@ func (p *progress) update(s scanner.Progress) {
 	const width = 24
 	filled := pct * width / 100
 	bar := strings.Repeat("#", filled) + strings.Repeat(".", width-filled)
-	fmt.Fprintf(p.w, "\r[%s] %3d%%  %d/%d  open: %d  workers: %d  %s   ",
-		bar, pct, s.Done, s.Total, s.Open, s.Active, now.Sub(p.start).Round(time.Second))
+	fmt.Fprintf(p.w, "\r[%s] %3d%%  %d/%d  %s: %d  workers: %d  %s   ",
+		bar, pct, s.Done, s.Total, p.label, s.Open, s.Active, now.Sub(p.start).Round(time.Second))
 	p.shown = true
 }
 

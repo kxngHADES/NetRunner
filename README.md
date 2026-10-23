@@ -126,9 +126,16 @@ netrunner scan --target 192.168.1.10 --ports web
 
 # Save a machine-readable report
 netrunner scan --target 192.168.1.10 --format json --output results.json
+
+# Find which devices are up on your home network
+netrunner discover --subnet 192.168.1.0/24
+
+# Watch it work: live view of workers, hosts and totals
+netrunner discover --subnet 192.168.1.0/24 --dashboard
+netrunner scan --target 192.168.1.1,192.168.1.10 --ports 1-1024 --dashboard
 ```
 
-Not sure where to start? `netrunner --help` and `netrunner scan --help` both include examples.
+Not sure where to start? `netrunner --help`, `netrunner scan --help` and `netrunner discover --help` all include examples.
 
 ### Flags
 
@@ -143,8 +150,26 @@ Not sure where to start? `netrunner --help` and `netrunner scan --help` both inc
 | `--show-closed` | Include closed and filtered ports in the table | off |
 | `--no-color` | Turn off colors | auto |
 | `--quiet` | Hide the progress bar | off |
+| `--dashboard` | Show the live dashboard instead of the progress bar | off |
 
 Progress goes to stderr and only appears on a real terminal, so `--format json` on stdout is always clean JSON you can pipe anywhere.
+
+### Discovery
+
+`netrunner discover` finds live hosts on a subnet. It tries a TCP connection to a handful of common ports on every address; a host counts as **alive** as soon as any probe is accepted *or* refused (a refusal still proves something answered), and its remaining probes are skipped.
+
+| Flag | What it does | Default |
+|---|---|---|
+| `--subnet` | IPv4 CIDR such as `192.168.1.0/24`, `/16` or longer. Separate several with commas. Network and broadcast addresses are skipped. | required |
+| `--ports` | Probe ports, same syntax as `scan` | `discover` profile (22, 53, 80, 135, 139, 443, 445, 3389, 5000, 8080, 62078) |
+
+`--workers`, `--timeout`, `--format`, `--output`, `--no-color`, `--quiet` and `--dashboard` work as they do for `scan`.
+
+A device that ignores every probe port (a phone with nothing listening, a strict firewall) will not show up, so treat the list as "at least these", not "only these".
+
+### Live dashboard
+
+Add `--dashboard` to `scan` or `discover` for a full live view on stderr: overall progress with rate and ETA, how many workers are busy, a per-host table (scan) or the live hosts as they are found (discover), and running open/closed/filtered totals. It redraws in place and leaves the final frame on screen when the run finishes or you press Ctrl+C. Like the progress bar, it only appears on an interactive terminal, so piping or redirecting output is unaffected.
 
 ---
 
@@ -179,6 +204,16 @@ targets  settings  summary  hosts[ ip, hostname, reachable, ports[ ... ] ]
 
 Successful connections include `latency_ms`. Every report states its own target and settings, so you can always tell what was scanned.
 
+Discovery reports use the same envelope with `"kind": "discovery"`:
+
+```text
+schema_version  kind  scan_id  tool  status  started_at  completed_at  duration_ms
+subnets  settings[ probe_ports ... ]  summary[ hosts_planned hosts_probed hosts_alive probes_sent ]
+hosts[ ip, port, state, service, latency_ms ]
+```
+
+Each host records the probe that proved it alive.
+
 ---
 
 ## Roadmap
@@ -188,13 +223,13 @@ NetRunner is built in phases. Each one is useful on its own.
 | Phase | Goal | Status |
 |---|---|---|
 | 1. Core scanner | TCP port scanning, worker pool, JSON export | **Done** |
-| 2. Discovery | Find live hosts on a subnet (`netrunner discover --subnet ...`) | Planned |
-| 3. Live dashboard | Rich terminal view with workers, hosts, and totals | Planned |
+| 2. Discovery | Find live hosts on a subnet (`netrunner discover --subnet ...`) | **Done** |
+| 3. Live dashboard | Rich terminal view with workers, hosts, and totals | **Done** |
 | 4. Intelligence | Scan history, change detection, light banner checks | Planned |
 
 ## Limitations
 
-- TCP connect checks only. No ICMP, ARP, UDP, or stealth scanning.
+- TCP connect checks only. No ICMP, ARP, UDP, or stealth scanning. Discovery therefore misses hosts that answer none of the probe ports.
 - Service names come from port numbers, so a web server on port 9999 will not be labelled as one.
 - IPv4 only for now.
 

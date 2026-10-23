@@ -50,12 +50,14 @@ Usage:
 
 Commands:
   scan      Scan TCP ports on one or more hosts
+  discover  Find live hosts on a subnet
   version   Print the version
 
 Examples:
   netrunner scan --target 127.0.0.1 --ports 1-1024
   netrunner scan --target 192.168.1.10 --ports 22,80,443,8080
   netrunner scan --target 192.168.1.10 --ports web --format json --output results.json
+  netrunner discover --subnet 192.168.1.0/24 --dashboard
 
 Only scan networks and systems you own or have explicit permission to assess.
 Run "netrunner <command> --help" for command flags.
@@ -79,6 +81,10 @@ func Run(args []string, stdout, stderr io.Writer) int {
 		ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 		defer stop()
 		return finish(runScan(ctx, args[1:], stdout, stderr), stderr)
+	case "discover":
+		ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+		defer stop()
+		return finish(runDiscover(ctx, args[1:], stdout, stderr), stderr)
 	default:
 		fmt.Fprintf(stderr, "netrunner: unknown command %q\n\n%s", args[0], rootHelp())
 		return ExitUsage

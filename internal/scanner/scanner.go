@@ -43,6 +43,8 @@ var profiles = map[string][]uint16{
 	"common": {21, 22, 23, 25, 53, 80, 110, 135, 139, 143, 443, 445, 993, 995,
 		1433, 3306, 3389, 5432, 5900, 6379, 8080, 8443},
 	"web": {80, 443, 8000, 8008, 8080, 8443, 8888},
+	// Ports likely to answer on desktops, servers, routers and phones; used by discover.
+	"discover": {22, 53, 80, 135, 139, 443, 445, 3389, 5000, 8080, 62078},
 }
 
 // DefaultProfile is used when --ports is not given.
