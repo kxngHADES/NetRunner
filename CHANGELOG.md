@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.0-alpha](https://github.com/kxngHADES/NetRunner/compare/v0.0.1-alpha...v0.1.0-alpha) (2026-10-23)
+
+
+### Features
+
+* add subnet discovery and live terminal dashboard ([ad8d517](https://github.com/kxngHADES/NetRunner/commit/ad8d517619e9d6a977a9a880ea8efb3e2fca9f05))
+* add subnet discovery and live terminal dashboard ([ad8d517](https://github.com/kxngHADES/NetRunner/commit/ad8d517619e9d6a977a9a880ea8efb3e2fca9f05))
+* add subnet discovery and live terminal dashboard ([ceff8e6](https://github.com/kxngHADES/NetRunner/commit/ceff8e634fa4b551905c6dff44fea1ae5c4ad737))
+
 ## 0.0.1-alpha (2026-10-15)
 
 
